@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GBC Ball Counter</string>
+    <string name="startstop">Start</string>
+    <string name="reset">Reset</string>
+    <string name="balls_per_second">BPS</string>
+    <string name="ball_count">Balls</string>
+    <string name="duration">Duration</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="ball_value">%1$d</string>
+    <string name="image_format_not_supported">Image format (%1$s/%2$d) not supported.</string>
+</resources>
