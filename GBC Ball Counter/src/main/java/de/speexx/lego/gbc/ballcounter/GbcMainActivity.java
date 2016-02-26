@@ -456,7 +456,7 @@ public class GbcMainActivity extends AppCompatActivity {
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
         }
     }
-
+    
 /*
     private static class ImageSaver implements Runnable {
 
