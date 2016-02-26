@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="image_capture_durations">
+        <item>50</item>
+        <item>75</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+        <item>250</item>
+    </string-array>
+
+    <string-array name="image_capture_delay_after_detection">
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+        <item>250</item>
+        <item>300</item>
+        <item>350</item>
+    </string-array>
+
+    <string-array name="brightness_difference_values">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
+        <item>55</item>
+        <item>60</item>
+        <item>65</item>
+        <item>70</item>
+    </string-array>
+
+    <string-array name="minimum_difference_percent">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>7</item>
+        <item>10</item>
+        <item>12</item>
+        <item>15</item>
+        <item>17</item>
+        <item>20</item>
+        <item>22</item>
+        <item>25</item>
+    </string-array>
+</resources>

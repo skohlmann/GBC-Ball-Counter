@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--PreferenceCategory android:title="@string/first_scan_background_contrast_strategy_settings"-->
+
+        <ListPreference android:title="@string/capture_delay_after_detection"
+                        android:summary="@string/capture_delay_after_detection_summary"
+                        android:key="capture_delay"
+                        android:defaultValue="200"
+                        android:entries="@array/image_capture_delay_after_detection"
+                        android:entryValues="@array/image_capture_delay_after_detection" />
+
+        <ListPreference android:title="@string/brightness_difference"
+                        android:summary="@string/brightness_difference_summary"
+                        android:key="brightness_difference"
+                        android:defaultValue="100"
+                        android:entries="@array/brightness_difference_values"
+                        android:entryValues="@array/brightness_difference_values" />
+
+        <ListPreference android:title="@string/minimum_difference"
+                        android:summary="@string/minimum_difference_summary"
+                        android:key="minimum_difference_percent"
+                        android:defaultValue="3"
+                        android:entries="@array/minimum_difference_percent"
+                        android:entryValues="@array/minimum_difference_percent" />
+    <!--PreferenceCategory-->
+</PreferenceScreen>

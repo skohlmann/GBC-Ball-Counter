@@ -17,6 +17,7 @@
  */
 package de.speexx.lego.gbc.ballcounter;
 
+import android.content.SharedPreferences;
 import android.graphics.ImageFormat;
 import android.media.Image;
 import android.util.Log;
@@ -34,15 +35,21 @@ public final class FirstScanBackgroundContrastDiffBallDetectionStrategy implemen
 
     private static  final String TAG = FirstScanBackgroundContrastDiffBallDetectionStrategy.class.getSimpleName();
 
-    private static final int ATTENUATION = 30;
+    private static final int BRIGHTNESS_DIFFERENCE = 30;
     private static final int MIN_DIFF_PERCENT = 5;
-    private static final int SCAN_DELAY_IN_MILLIS = 200;
+    private static final int CAPTURE_DELAY_IN_MILLIS = 200;
 
     private byte[] firstScan = null;
     private byte[] scan = null;
     private int onePercent = 0;
     private boolean firstCall = true;
     private int scanIgnoreCountdown = 0;
+
+    private int captureDelay = CAPTURE_DELAY_IN_MILLIS;
+    private int brightnessDifference = BRIGHTNESS_DIFFERENCE;
+    private int minDiffPercent = MIN_DIFF_PERCENT;
+
+    private int imageCaptureDelay = GbcMainActivity.IMAGE_CAPTURE_DELAY_IN_MILLIS;
 
     public boolean hasImageScanChanged(final Image image) {
         if (image == null) {
@@ -75,26 +82,25 @@ public final class FirstScanBackgroundContrastDiffBallDetectionStrategy implemen
     }
 
     final void calculateAndSetScanIgnoreCount() {
-        this.scanIgnoreCountdown = SCAN_DELAY_IN_MILLIS / GbcMainActivity.IMAGE_CAPTURE_DELAY_IN_MILLIS;
+        this.scanIgnoreCountdown = this.captureDelay / this.imageCaptureDelay;
     }
 
     final boolean compareImageArrays() {
-        assert this.firstScan != null;
-        assert this.scan != null;
-        assert this.scan.length == this.firstScan.length;
+        if (BuildConfig.DEBUG) {if (this.firstScan == null || this.scan == null) {throw new AssertionError("this.firstScan == null || this.scan == null");}}
+        if (BuildConfig.DEBUG) {if (this.scan.length != this.firstScan.length) {throw new AssertionError("this.scan.length != this.firstScan.length");}}
 
         final int length = this.firstScan.length;
         int diffCount = 0;
         for (int i = 0; i < length; i++) {
             final int diff = this.firstScan[i] - this.scan[i];
             final int absDiff = diff < 0 ? -diff : diff;
-            if (absDiff > ATTENUATION) {
+            if (absDiff > this.brightnessDifference) {
                 diffCount++;
             }
         }
 
         final int diffPercent = diffCount / this.onePercent; // divide by 0 possible. Indicates other problems
-        return diffPercent >= MIN_DIFF_PERCENT;
+        return diffPercent >= minDiffPercent;
     }
 
     final boolean isScanRequired() {
@@ -121,11 +127,62 @@ public final class FirstScanBackgroundContrastDiffBallDetectionStrategy implemen
         image.getPlanes()[0].getBuffer().get(array);
     }
 
-    public void onStart() {
+    public void onStart(final ContextContainer contextContainer) {
+        if (BuildConfig.DEBUG) {if (contextContainer == null) {throw new AssertionError("no context container");}}
         synchronized(this) {
+
             this.firstCall = true;
             this.scan = null;
             this.firstScan = null;
+
+            configure(contextContainer);
         }
+    }
+
+    final void configure(final ContextContainer contextContainer) {
+        final SharedPreferences prefs = contextContainer.getPreferences();
+
+        if (BuildConfig.DEBUG) {if (prefs == null) {throw new AssertionError("no preferences available");}}
+
+        try {
+            final String captureDelayString = prefs.getString("capture_delay", "" + CAPTURE_DELAY_IN_MILLIS);
+            this.captureDelay = Integer.parseInt(captureDelayString);
+        } catch (final NumberFormatException e) {
+            Log.w(TAG, "Unable to get numerical value for capture_delay. Fall back to default: " + CAPTURE_DELAY_IN_MILLIS, e);
+            this.captureDelay = CAPTURE_DELAY_IN_MILLIS;
+        }
+
+        try {
+            final String brightnessDifferenceString = prefs.getString("brightness_difference", "" + BRIGHTNESS_DIFFERENCE);
+            this.brightnessDifference = Integer.parseInt(brightnessDifferenceString);
+        } catch (final NumberFormatException e) {
+            Log.w(TAG, "Unable to get numerical value for brightness_difference. Fall back to default: " + BRIGHTNESS_DIFFERENCE, e);
+            this.brightnessDifference = BRIGHTNESS_DIFFERENCE;
+        }
+
+        try {
+            final String minDiffPercentString = prefs.getString("minimum_difference_percent", "" + MIN_DIFF_PERCENT);
+            this.minDiffPercent = Integer.parseInt(minDiffPercentString);
+        } catch (final NumberFormatException e) {
+            Log.w(TAG, "Unable to get numerical value for minimum_difference_percent. Fall back to default: " + MIN_DIFF_PERCENT, e);
+            this.minDiffPercent = MIN_DIFF_PERCENT;
+        }
+
+        final GbcMainActivity mainActivity = contextContainer.getActivity();
+        if (mainActivity == null) {
+            Log.w(TAG, "GbcMainActivity reference is null. Fallback to default IMAGE_CAPTURE_DELAY_IN_MILLIS: " + GbcMainActivity.IMAGE_CAPTURE_DELAY_IN_MILLIS);
+            this.imageCaptureDelay = GbcMainActivity.IMAGE_CAPTURE_DELAY_IN_MILLIS;
+        } else {
+            this.imageCaptureDelay = mainActivity.getImageCaptureDelayInMillis();
+        }
+
+        Log.v(TAG, "Settings: capture_delay=" + this.captureDelay
+                + "; brightness_difference=" + this.brightnessDifference
+                + "; minimum_difference_percent=" + this.minDiffPercent
+                + "; imageCaptureDelay: "  + this.imageCaptureDelay);
+    }
+
+    public int getPreferencesId() {
+        return R.xml.preferences_first_scan_background_contrast_diff_ball_detection_strategy;
     }
 }

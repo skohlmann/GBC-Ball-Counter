@@ -23,6 +23,9 @@ import android.media.Image;
  * Support for multiple different strategies to detect the balls in the capture image.
  */
 public interface BallDetectionStrategy {
+
+    String KEY_PREFS_STRATEGY = "strategy_prefs";
+
     /**
      * Will be called if and only if a new image was captured. The implementation will analyze,
      * how ever, the image and returns if <tt>true</tt> if and only if the strategy decides a
@@ -35,6 +38,9 @@ public interface BallDetectionStrategy {
     /**
      * Indicates a new capture session for ball detection.
      * Use the the implementation to initialize the detection strategy implementation.
+     * @param contextContainer
      */
-    void onStart();
+    void onStart(ContextContainer contextContainer);
+
+    int getPreferencesId();
 }

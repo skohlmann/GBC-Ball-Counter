@@ -1,1 +1,5 @@
 **/build
+.gradle
+.idea
+GBC-Ball-Counter.iml
+GBC\ Ball\ Counter/GBC\ Ball\ Counter.iml

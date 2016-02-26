@@ -79,9 +79,8 @@ public final class InterlaceBallDetectionStrategy implements BallDetectionStrate
     }
 
     final boolean compareImageArrays() {
-        assert this.odd != null;
-        assert this.even != null;
-        assert this.odd.length == this.even.length;
+        if (BuildConfig.DEBUG) {if (this.odd == null || this.even == null) {throw new AssertionError("odd == null || even == null");}}
+        if (BuildConfig.DEBUG) {if (this.odd.length != this.even.length) {throw new AssertionError("odd.length != even.length");}}
 
         final int length = this.odd.length;
         int diffCount = 0;
@@ -107,5 +106,9 @@ public final class InterlaceBallDetectionStrategy implements BallDetectionStrate
         }
         this.oddEven ^= true;
     }
-    public void onStart() {}
+    public void onStart(final ContextContainer contextContainer) {}
+
+    public int getPreferencesId() {
+        return -1;
+    }
 }

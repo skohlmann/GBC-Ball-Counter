@@ -17,7 +17,10 @@
  */
 package de.speexx.lego.gbc.ballcounter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -33,13 +36,17 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Size;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -54,6 +61,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class GbcMainActivity extends AppCompatActivity {
 
     private static final String TAG = GbcMainActivity.class.getSimpleName();
@@ -64,10 +72,12 @@ public class GbcMainActivity extends AppCompatActivity {
 
     private static final int CAPTURE_FORMAT = ImageFormat.YUV_420_888;
 
+    private int mImageCaptureDelayInMillis = IMAGE_CAPTURE_DELAY_IN_MILLIS;
+
     /** Count of balls detected by the system. */
     private int mBallCount;
 
-    /** The image format to capture. At this time its {@link ImageFormat.YUV_420_888}. Other formats are not supported. */
+    /** The image format to capture. At this time its {@link ImageFormat#YUV_420_888}. Other formats are not supported. */
     private int mCaptureImageFormat;
 
     /** Indicates a session for counting balls. Will be set to <tt>true</tt> to start a session. Normally user triggered. */
@@ -79,6 +89,9 @@ public class GbcMainActivity extends AppCompatActivity {
     /** The view for the {@link #mBallCount} value. */
     private TextView mBallCountView;
 
+    /** The {@link Menu} to enable or disable menu items. */
+    private Menu mOptionsMenu;
+
     /** Capture builder. */
     private CaptureRequest.Builder mPreviewBuilder, mCaptureBuilder;
 
@@ -87,6 +100,8 @@ public class GbcMainActivity extends AppCompatActivity {
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
     private Size mPreviewSize;
+
+    private SharedPreferences mSharedPreferences;
 
     /** Reader for the ball detection image. */
     private ImageReader mCaptureReader; // don't convert to local variable. Otherwise GC will clean up weak reference
@@ -178,7 +193,8 @@ public class GbcMainActivity extends AppCompatActivity {
             } catch (final CameraAccessException ex) {
                 ex.printStackTrace();
             } finally {
-                GbcMainActivity.this.mBackgroundHandler.postDelayed(GbcMainActivity.this.mImageCaptureTask, IMAGE_CAPTURE_DELAY_IN_MILLIS);
+                GbcMainActivity.this.mBackgroundHandler.postDelayed(GbcMainActivity.this.mImageCaptureTask,
+                                                                    GbcMainActivity.this.mImageCaptureDelayInMillis);
             }
         }
     };
@@ -196,12 +212,17 @@ public class GbcMainActivity extends AppCompatActivity {
                                                                public void onClick(final View v) {
                                                                    GbcMainActivity.this.mIsCountSession ^= true;
                                                                    if (GbcMainActivity.this.mIsCountSession) {
+                                                                       disableOptionMenuItems();
                                                                        GbcMainActivity.this.resetDuration();
                                                                        if (GbcMainActivity.this.mBallDetectionStrategy != null) {
-                                                                           GbcMainActivity.this.mBallDetectionStrategy.onStart();
+                                                                           final ContextContainer ctxCont = new ContextContainer();
+                                                                           ctxCont.setPreferences(mSharedPreferences);
+                                                                           ctxCont.setActivity(GbcMainActivity.this);
+                                                                           GbcMainActivity.this.mBallDetectionStrategy.onStart(ctxCont);
                                                                        }
                                                                        GbcMainActivity.this.mDurationChrono.start();
                                                                    } else {
+                                                                       enableOptionMenuItems();
                                                                        GbcMainActivity.this.mDurationChrono.stop();
                                                                    }
                                                                }
@@ -215,6 +236,27 @@ public class GbcMainActivity extends AppCompatActivity {
                 GbcMainActivity.this.resetDuration();
             }
         });
+
+        this.mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        configure(this.mSharedPreferences);
+    }
+
+    final void disableOptionMenuItems() {
+        disableEnableOptionMenuItems(false);
+    }
+
+    final void enableOptionMenuItems() {
+        disableEnableOptionMenuItems(true);
+    }
+
+    final void disableEnableOptionMenuItems(final boolean enableOrDisable) {
+        if (this.mOptionsMenu == null) {
+            return;
+        }
+        final int size = this.mOptionsMenu.size();
+        for (int i = Menu.FIRST; i < Menu.FIRST + size; i++) {
+            this.mOptionsMenu.findItem(i).setEnabled(enableOrDisable);
+        }
     }
 
     final void startCaptureTask() {
@@ -250,6 +292,7 @@ public class GbcMainActivity extends AppCompatActivity {
             this.mPreviewTextureView.setSurfaceTextureListener(this.mSurfaceTextureListener);
         }
         startCaptureTask();
+        configure(this.mSharedPreferences);
     }
 
     @Override
@@ -456,7 +499,59 @@ public class GbcMainActivity extends AppCompatActivity {
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
         }
     }
-    
+
+    private static final int OPTION_GROUP_ID = 1;
+    private static final int PREFS_ID = Menu.FIRST;
+    private static final int GOV_ID = Menu.FIRST + 1;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        this.mOptionsMenu = menu;
+        menu.add(OPTION_GROUP_ID, PREFS_ID, PREFS_ID, R.string.action_show_preferences);
+        menu.add(OPTION_GROUP_ID, GOV_ID, GOV_ID, R.string.action_show_governance);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case PREFS_ID: {
+                final Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+                final int detectionStratgyPrefs = this.mBallDetectionStrategy.getPreferencesId();
+                i.putExtra(BallDetectionStrategy.KEY_PREFS_STRATEGY, detectionStratgyPrefs);
+                startActivity(i);
+                return true;
+            }
+            case GOV_ID: {
+                final Intent i = new Intent(getApplicationContext(), GovernanceActivity.class);
+                startActivity(i);
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
+
+    public int getImageCaptureDelayInMillis() {
+        return this.mImageCaptureDelayInMillis;
+    }
+
+    final void configure(final SharedPreferences prefs) {
+        if (BuildConfig.DEBUG) {if (prefs == null) {throw new AssertionError("no preferences available");}}
+
+        try {
+            final String imageCaptureDelayInMillisString = prefs.getString("capture_delay_duration", "" + IMAGE_CAPTURE_DELAY_IN_MILLIS);
+            this.mImageCaptureDelayInMillis = Integer.parseInt(imageCaptureDelayInMillisString);
+            Log.i(TAG, "capture_delay_duration: " + imageCaptureDelayInMillisString);
+        } catch (final NumberFormatException e) {
+            Log.w(TAG, "Unable to get numerical value for capture_delay_duration. Fall back to default: " + IMAGE_CAPTURE_DELAY_IN_MILLIS, e);
+            this.mImageCaptureDelayInMillis = IMAGE_CAPTURE_DELAY_IN_MILLIS;
+        }
+    }
+
+
 /*
     private static class ImageSaver implements Runnable {
 
