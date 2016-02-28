@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--PreferenceCategory android:title="@string/core_settings"-->
-        <ListPreference android:title="@string/capture_delay"
-                        android:summary="@string/capture_delay_summary"
-                        android:key="capture_delay_duration"
-                        android:defaultValue="100"
-                        android:entries="@array/image_capture_durations"
-                        android:entryValues="@array/image_capture_durations" />
-    <!--PreferenceCategory-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:sbp="http://schemas.android.com/apk/res/de.speexx.lego.gbc.ballcounter">
+    <de.speexx.lego.gbc.ballcounter.SeekBarPreference
+        android:title="@string/capture_delay"
+        android:summary="@string/capture_delay_summary"
+        android:key="capture_delay_duration"
+        android:defaultValue="100"
+        sbp:minValue="25"
+        sbp:maxValue="500" />
 </PreferenceScreen>

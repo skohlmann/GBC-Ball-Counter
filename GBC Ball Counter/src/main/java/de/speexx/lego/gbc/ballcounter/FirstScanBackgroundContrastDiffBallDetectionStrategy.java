@@ -144,29 +144,9 @@ public final class FirstScanBackgroundContrastDiffBallDetectionStrategy implemen
 
         if (BuildConfig.DEBUG) {if (prefs == null) {throw new AssertionError("no preferences available");}}
 
-        try {
-            final String captureDelayString = prefs.getString("capture_delay", "" + CAPTURE_DELAY_IN_MILLIS);
-            this.captureDelay = Integer.parseInt(captureDelayString);
-        } catch (final NumberFormatException e) {
-            Log.w(TAG, "Unable to get numerical value for capture_delay. Fall back to default: " + CAPTURE_DELAY_IN_MILLIS, e);
-            this.captureDelay = CAPTURE_DELAY_IN_MILLIS;
-        }
-
-        try {
-            final String brightnessDifferenceString = prefs.getString("brightness_difference", "" + BRIGHTNESS_DIFFERENCE);
-            this.brightnessDifference = Integer.parseInt(brightnessDifferenceString);
-        } catch (final NumberFormatException e) {
-            Log.w(TAG, "Unable to get numerical value for brightness_difference. Fall back to default: " + BRIGHTNESS_DIFFERENCE, e);
-            this.brightnessDifference = BRIGHTNESS_DIFFERENCE;
-        }
-
-        try {
-            final String minDiffPercentString = prefs.getString("minimum_difference_percent", "" + MIN_DIFF_PERCENT);
-            this.minDiffPercent = Integer.parseInt(minDiffPercentString);
-        } catch (final NumberFormatException e) {
-            Log.w(TAG, "Unable to get numerical value for minimum_difference_percent. Fall back to default: " + MIN_DIFF_PERCENT, e);
-            this.minDiffPercent = MIN_DIFF_PERCENT;
-        }
+        this.captureDelay = prefs.getInt("capture_delay", CAPTURE_DELAY_IN_MILLIS);
+        this.brightnessDifference = prefs.getInt("brightness_difference", BRIGHTNESS_DIFFERENCE);
+        this.minDiffPercent = prefs.getInt("minimum_difference_percent", MIN_DIFF_PERCENT);
 
         final GbcMainActivity mainActivity = contextContainer.getActivity();
         if (mainActivity == null) {
