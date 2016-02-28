@@ -541,14 +541,7 @@ public class GbcMainActivity extends AppCompatActivity {
     final void configure(final SharedPreferences prefs) {
         if (BuildConfig.DEBUG) {if (prefs == null) {throw new AssertionError("no preferences available");}}
 
-        try {
-            final String imageCaptureDelayInMillisString = prefs.getString("capture_delay_duration", "" + IMAGE_CAPTURE_DELAY_IN_MILLIS);
-            this.mImageCaptureDelayInMillis = Integer.parseInt(imageCaptureDelayInMillisString);
-            Log.i(TAG, "capture_delay_duration: " + imageCaptureDelayInMillisString);
-        } catch (final NumberFormatException e) {
-            Log.w(TAG, "Unable to get numerical value for capture_delay_duration. Fall back to default: " + IMAGE_CAPTURE_DELAY_IN_MILLIS, e);
-            this.mImageCaptureDelayInMillis = IMAGE_CAPTURE_DELAY_IN_MILLIS;
-        }
+        this.mImageCaptureDelayInMillis = prefs.getInt("capture_delay_duration", IMAGE_CAPTURE_DELAY_IN_MILLIS);
     }
 
 
