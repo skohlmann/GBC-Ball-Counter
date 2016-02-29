@@ -13,8 +13,9 @@
     <string name="action_show_preferences">Settings</string>
     <string name="action_show_governance">License</string>
     <string name="license_text">
-        GBC Ball Counter to count passing Lego&#174; balls&lt;br />
-        Copyright (C) 2016 Sascha Kohlmann&lt;/p>
+        &lt;h1>Main license&lt;/h1>
+        &lt;p>GBC Ball Counter to count passing Lego&#174; balls.&lt;/p>
+        &lt;p>Copyright (C) 2016 Sascha Kohlmann&lt;/p>
 
         &lt;p>This program is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -29,15 +30,26 @@
         &lt;p>You should have received a copy of the GNU General Public License
         along with this program. If not, see
         &lt;a href="http://www.gnu.org/licenses/gpl-3.0.html">http://www.gnu.org/licenses/gpl-3.0.html&lt;/a>.&lt;/p>
-        &lt;p>───────────────────&lt;/p>
+        &lt;p>─────────────────────&lt;/p>
         &lt;/p>Find the source code on Github at
         &lt;a href="https://github.com/skohlmann/GBC-Ball-Counter">https://github.com/skohlmann/GBC-Ball-Counter&lt;/a>.&lt;/p>
-        &lt;p>───────────────────&lt;/p>
+        &lt;h2>Other licenses&lt;/h2>
         &lt;p>Parts of the program are taken from the The Android Open Source Project and are
         licensed under the terms of the
         &lt;a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2 license&lt;/a>.
         See &lt;a href="https://github.com/skohlmann/GBC-Ball-Counter">source code&lt;/a>
         for more information.&lt;/p>
+        &lt;h2>Artwork&lt;/h2>
+        &lt;p>Parts of the GBC Ball Counter icon are designed by different contributors:&lt;/p>
+
+        &lt;p>&lt;a href="https://commons.wikimedia.org/wiki/File:Soccerball.svg">Football/Soccerball&lt;/a>:
+        Taken from Wikimedia Commons. Made available under the
+        &lt;a href="https://creativecommons.org/publicdomain/zero/1.0/deed.en">Creative Commons CC0 1.0 Universal Public Domain Dedication&lt;/a>.&lt;/p>
+
+        &lt;p>&lt;a href="https://openclipart.org/detail/4667/basketball">Basketball&lt;/a>:
+        Taken from &lt;a href="https://openclipart.org/">Open Clipart&lt;/a>. Made available as
+        &lt;a href="https://openclipart.org/share">Public Domain&lt;/a>
+        by &lt;a href="https://openclipart.org/user-detail/Gioppino">Gioppino&lt;/a>.&lt;/p>
     </string>
     <string name="core_settings">Core Settings</string>
     <string name="title_activity_settings">Settings</string>
