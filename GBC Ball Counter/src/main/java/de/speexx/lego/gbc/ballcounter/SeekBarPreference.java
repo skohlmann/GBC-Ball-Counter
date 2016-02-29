@@ -43,10 +43,8 @@ public class SeekBarPreference extends DialogPreference implements OnSeekBarChan
     private int mMinValue;
     private int mMaxValue;
     private int mDefaultValue;
-
     private int mCurrentValue;
 
-    private SeekBar mSeekBar;
     private TextView mTextView;
 
     public SeekBarPreference(final Context context, final AttributeSet attrs) {
@@ -71,16 +69,16 @@ public class SeekBarPreference extends DialogPreference implements OnSeekBarChan
         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View view = inflater.inflate(R.layout.dialog_slider, null);
 
-        ((TextView) view.findViewById(R.id.min_value)).setText(Integer.toString(this.mMinValue));
-        ((TextView) view.findViewById(R.id.max_value)).setText(Integer.toString(this.mMaxValue));
+        ((TextView) view.findViewById(R.id.min_value)).setText(String.format("%d", this.mMinValue));
+        ((TextView) view.findViewById(R.id.max_value)).setText(String.format("%d", this.mMaxValue));
 
-        this.mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-        this.mSeekBar.setMax(this.mMaxValue - this.mMinValue);
-        this.mSeekBar.setProgress(this.mCurrentValue - this.mMinValue);
-        this.mSeekBar.setOnSeekBarChangeListener(this);
+        final SeekBar sb = (SeekBar) view.findViewById(R.id.seek_bar);
+        sb.setMax(this.mMaxValue - this.mMinValue);
+        sb.setProgress(this.mCurrentValue - this.mMinValue);
+        sb.setOnSeekBarChangeListener(this);
 
         this.mTextView = (TextView) view.findViewById(R.id.current_value);
-        this.mTextView.setText(Integer.toString(this.mCurrentValue));
+        this.mTextView.setText(String.format("%d", this.mCurrentValue));
 
         return view;
     }
@@ -115,7 +113,7 @@ public class SeekBarPreference extends DialogPreference implements OnSeekBarChan
 
     public void onProgressChanged(final SeekBar seek, final int value, final boolean fromTouch) {
         this.mCurrentValue = value + this.mMinValue;
-        this.mTextView.setText(Integer.toString(this.mCurrentValue));
+        this.mTextView.setText(String.format("%d", this.mCurrentValue));
     }
 
     public void onStartTrackingTouch(final SeekBar seek) {

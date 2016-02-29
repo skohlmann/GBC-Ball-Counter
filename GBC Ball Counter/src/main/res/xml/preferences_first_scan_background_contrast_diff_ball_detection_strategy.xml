@@ -2,29 +2,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:sbp="http://schemas.android.com/apk/res/de.speexx.lego.gbc.ballcounter">
 
-        <de.speexx.lego.gbc.ballcounter.SeekBarPreference
-                        android:title="@string/capture_delay_after_detection"
-                        android:summary="@string/capture_delay_after_detection_summary"
-                        android:key="capture_delay"
-                        android:persistent="true"
-                        android:defaultValue="200"
-                        sbp:minValue="25"
-                        sbp:maxValue="1000" />
+    <de.speexx.lego.gbc.ballcounter.SeekBarPreference
+        android:title="@string/capture_delay_after_detection"
+        android:summary="@string/capture_delay_after_detection_summary"
+        android:key="capture_delay"
+        android:persistent="true"
+        android:defaultValue="200"
+        sbp:minValue="25"
+        sbp:maxValue="1000" />
 
-        <de.speexx.lego.gbc.ballcounter.SeekBarPreference
-                        android:title="@string/brightness_difference"
-                        android:summary="@string/brightness_difference_summary"
-                        android:key="brightness_difference"
-                        android:defaultValue="60"
-                        sbp:minValue="10"
-                        sbp:maxValue="200" />
+    <de.speexx.lego.gbc.ballcounter.SeekBarPreference
+        android:title="@string/brightness_difference"
+        android:summary="@string/brightness_difference_summary"
+        android:key="brightness_difference"
+        android:defaultValue="60"
+        sbp:minValue="10"
+        sbp:maxValue="200" />
 
-        <de.speexx.lego.gbc.ballcounter.SeekBarPreference
-                        android:title="@string/minimum_difference"
-                        android:summary="@string/minimum_difference_summary"
-                        android:key="minimum_difference_percent"
-                        android:defaultValue="5"
-                        sbp:minValue="1"
-                        sbp:maxValue="100" />
+    <de.speexx.lego.gbc.ballcounter.SeekBarPreference
+        android:title="@string/minimum_difference"
+        android:summary="@string/minimum_difference_summary"
+        android:key="minimum_difference_percent"
+        android:defaultValue="5"
+        sbp:minValue="1"
+        sbp:maxValue="100" />
 
 </PreferenceScreen>
