@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 21
         versionCode 3
-        versionName "1.2-SNAPSHOT"
+        versionName "1.2-SNAPSHOT-build-" + getDate();
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -21,6 +21,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format("yyyyMMdd'T'HHmmss")
+    return formattedDate
 }
 
 dependencies {

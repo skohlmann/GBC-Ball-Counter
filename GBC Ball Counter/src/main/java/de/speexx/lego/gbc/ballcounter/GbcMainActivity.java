@@ -195,6 +195,36 @@ public class GbcMainActivity extends AppCompatActivity {
         }
     };
 
+    private final View.OnClickListener mStartstopToggleButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            GbcMainActivity.this.mIsCountSession ^= true;
+            if (GbcMainActivity.this.mIsCountSession) {
+                disableOptionMenuItems();
+                GbcMainActivity.this.resetDuration();
+                if (GbcMainActivity.this.mBallDetectionStrategy != null) {
+                    final ContextContainer ctxCont = new ContextContainer();
+                    ctxCont.setPreferences(mSharedPreferences);
+                    ctxCont.setActivity(GbcMainActivity.this);
+                    GbcMainActivity.this.mBallDetectionStrategy.onStart(ctxCont);
+                }
+                GbcMainActivity.this.mDurationChrono.start();
+            } else {
+                enableOptionMenuItems();
+                GbcMainActivity.this.mDurationChrono.stop();
+            }
+        }
+    };
+
+    private final View.OnClickListener mResetButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            GbcMainActivity.this.mBallCount = 0;
+            GbcMainActivity.this.updateBallCount();
+            GbcMainActivity.this.resetDuration();
+        }
+    };
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,35 +233,11 @@ public class GbcMainActivity extends AppCompatActivity {
         this.mPreviewTextureView = (AutoFitTextureView) findViewById(R.id.camera_view);
 
         this.mDurationChrono = (Chronometer) findViewById(R.id.duration_view);
-        findViewById(R.id.startstop_toggle_button).setOnClickListener(new View.OnClickListener() {
-                                                               @Override
-                                                               public void onClick(final View v) {
-                                                                   GbcMainActivity.this.mIsCountSession ^= true;
-                                                                   if (GbcMainActivity.this.mIsCountSession) {
-                                                                       disableOptionMenuItems();
-                                                                       GbcMainActivity.this.resetDuration();
-                                                                       if (GbcMainActivity.this.mBallDetectionStrategy != null) {
-                                                                           final ContextContainer ctxCont = new ContextContainer();
-                                                                           ctxCont.setPreferences(mSharedPreferences);
-                                                                           ctxCont.setActivity(GbcMainActivity.this);
-                                                                           GbcMainActivity.this.mBallDetectionStrategy.onStart(ctxCont);
-                                                                       }
-                                                                       GbcMainActivity.this.mDurationChrono.start();
-                                                                   } else {
-                                                                       enableOptionMenuItems();
-                                                                       GbcMainActivity.this.mDurationChrono.stop();
-                                                                   }
-                                                               }
-        });
         this.mBallCountView = (TextView) findViewById(R.id.ball_count_value);
-        findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                GbcMainActivity.this.mBallCount = 0;
-                GbcMainActivity.this.updateBallCount();
-                GbcMainActivity.this.resetDuration();
-            }
-        });
+        findViewById(R.id.startstop_toggle_button_top).setOnClickListener(this.mStartstopToggleButtonListener);
+        findViewById(R.id.startstop_toggle_button_bottom).setOnClickListener(this.mStartstopToggleButtonListener);
+        findViewById(R.id.reset_button_top).setOnClickListener(this.mResetButtonListener);
+        findViewById(R.id.reset_button_bottom).setOnClickListener(this.mResetButtonListener);
 
         this.mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         configure(this.mSharedPreferences);

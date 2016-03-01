@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016 Sascha Kohlmann. All rights reserved.
+  ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,7 +43,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/ball_count"
             android:id="@+id/ball_count_title"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textSize="20dp"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,28 +53,59 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="0"
             android:id="@+id/ball_count_value"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold"
+            android:textSize="25dp"/>
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <GridLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/balls_per_second"
-            android:id="@+id/balls_per_second_title"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal">
+
+            <Button
+                android:layout_width="110dp"
+                android:layout_height="65dp"
+                android:text="@string/reset"
+                android:id="@+id/reset_button_top"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_gravity="left|bottom"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="  "
+                android:id="@+id/balls_per_second_title"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_gravity="center_horizontal"/>
+
+            <ToggleButton
+                android:layout_width="110dp"
+                android:layout_height="65dp"
+                android:text="@string/startstop"
+                android:id="@+id/startstop_toggle_button_top"
+                android:layout_row="0"
+                android:layout_column="3"
+                android:checked="false"
+                android:textOff="@string/start"
+                android:textOn="@string/stop"
+                android:layout_gravity="right"/>
+        </GridLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0"
+            android:text=" "
             android:id="@+id/balls_per_second"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
 
         <Space
             android:layout_width="match_parent"
@@ -82,7 +132,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/duration_view"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold"/>
 
         <GridLayout
             android:layout_width="match_parent"
@@ -91,23 +142,25 @@
             android:layout_weight="0.58">
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="110dp"
+                android:layout_height="65dp"
                 android:text="@string/reset"
-                android:id="@+id/reset_button"
+                android:id="@+id/reset_button_bottom"
                 android:layout_row="6"
-                android:layout_column="0" />
+                android:layout_column="0"
+                android:layout_gravity="left"/>
 
             <ToggleButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="110dp"
+                android:layout_height="65dp"
                 android:text="@string/startstop"
-                android:id="@+id/startstop_toggle_button"
+                android:id="@+id/startstop_toggle_button_bottom"
                 android:layout_row="6"
                 android:layout_column="2"
                 android:checked="false"
                 android:textOff="@string/start"
-                android:textOn="@string/stop" />
+                android:textOn="@string/stop"
+                android:layout_gravity="right"/>
         </GridLayout>
 
         <TextView

@@ -1,8 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016 Sascha Kohlmann. All rights reserved.
+  ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
     <string name="app_name">GBC Ball Counter</string>
     <string name="startstop">Start</string>
     <string name="reset">Reset</string>
-    <string name="balls_per_second">BPS</string>
+    <!--string name="balls_per_second_title">BPS</string-->
+    <string name="balls_per_second_title"> </string>
     <string name="ball_count">Balls passed</string>
     <string name="duration">Duration</string>
     <string name="start">Start</string>
@@ -63,6 +83,6 @@
     <string name="brightness_difference">Brightness difference</string>
     <string name="brightness_difference_summary">The difference of the brightness for the captured image pixel to detected a change.</string>
 
-    <string name="minimum_difference">Miminum difference in percent</string>
+    <string name="minimum_difference">Minimum difference in percent</string>
     <string name="minimum_difference_summary">Minimum value in percent of detected changes to signal a passing ball.</string>
 </resources>

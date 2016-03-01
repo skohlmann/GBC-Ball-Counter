@@ -27,7 +27,7 @@ The implementation is based on the following hypothesis:
 
 The camera captures every 100 milliseconds an image (*Capture delay*). This captured image is scanned pixel by pixel for difference in brightness (chrominance). The difference is calculated against the *first captured image* after starting the counter. If the difference in brightness exceeds a threshold (*Brightness difference*) it will increase the counter for *detected pixel of brightness change*.
 
-The count of detected pixel of brightness changes must also exceed a threshold against all pixels of the detected image (*Miminum difference in percent*). If and only if this threshold ist also exceeded, the ball counter will be increased by one. 
+The count of detected pixel of brightness changes must also exceed a threshold against all pixels of the detected image (*Minimum difference in percent*). If and only if this threshold ist also exceeded, the ball counter will be increased by one. 
 
 If and only if the ball counter was increased, the detection algorithm waits for 200 milliseconds to capture the next image (*Capture after detection delay*).
 
@@ -35,7 +35,7 @@ The values for
 
 * Capture delay
 * Brightness difference
-* Miminum difference in percent
+* Minimum difference in percent
 * Capture delay
 
 can be changed in the settings dialog.
