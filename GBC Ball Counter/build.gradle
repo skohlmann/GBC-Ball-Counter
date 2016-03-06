@@ -8,8 +8,8 @@ android {
         applicationId "de.speexx.lego.gbc.ballcounter"
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.2-build-" + getDate();
+        versionCode 4
+        versionName "1.3-SNAPSHOT-build-" + getDate();
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
