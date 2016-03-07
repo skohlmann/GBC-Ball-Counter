@@ -36,6 +36,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -54,6 +55,7 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,33 +68,55 @@ public class GbcMainActivity extends AppCompatActivity {
 
     private static final String TAG = GbcMainActivity.class.getSimpleName();
 
-    /** The delay in milliseconds between two captures of a ball detection image.
-     * @see #mImageCaptureTask */
-    public static final int IMAGE_CAPTURE_DELAY_IN_MILLIS = 100;
+    /**
+     * The delay in milliseconds between two captures of a ball detection image.
+     *
+     * @see #mImageCaptureTask
+     */
+    public static final int IMAGE_CAPTURE_DELAY_IN_MILLIS = 50;
 
     private static final int CAPTURE_FORMAT = ImageFormat.YUV_420_888;
 
     private int mImageCaptureDelayInMillis = IMAGE_CAPTURE_DELAY_IN_MILLIS;
 
-    /** Count of balls detected by the system. */
+    /**
+     * Count of balls detected by the system.
+     */
     private int mBallCount;
 
-    /** The image format to capture. At this time its {@link ImageFormat#YUV_420_888}. Other formats are not supported. */
+    /**
+     * The image format to capture. At this time its {@link ImageFormat#YUV_420_888}. Other formats are not supported.
+     */
     private int mCaptureImageFormat;
 
-    /** Indicates a session for counting balls. Will be set to <tt>true</tt> to start a session. Normally user triggered. */
+    /**
+     * Indicates a session for counting balls. Will be set to <tt>true</tt> to start a session. Normally user triggered.
+     */
     private boolean mIsCountSession = false;
 
-    /** Time counter for elapsed time during a count session. */
+    /**
+     * Time counter for elapsed time during a count session.
+     */
     private Chronometer mDurationChrono;
 
-    /** The view for the {@link #mBallCount} value. */
+    /**
+     * The view for the {@link #mBallCount} value.
+     */
     private TextView mBallCountView;
 
-    /** The {@link Menu} to enable or disable menu items. */
+    /**
+     * The view for the balls per second value.
+     */
+    private TextView mBallsPerSecondView;
+
+    /**
+     * The {@link Menu} to enable or disable menu items.
+     */
     private Menu mOptionsMenu;
 
-    /** Capture builder. */
+    /**
+     * Capture builder.
+     */
     private CaptureRequest.Builder mPreviewBuilder, mCaptureBuilder;
 
     private CameraCaptureSession mCaptureSession;
@@ -101,21 +125,36 @@ public class GbcMainActivity extends AppCompatActivity {
     private Handler mBackgroundHandler;
     private Size mPreviewSize;
 
+    /**
+     * For the balls per second calculation.
+     */
+    private double mSecond;
+
     private SharedPreferences mSharedPreferences;
 
-    /** Reader for the ball detection image. */
+    /**
+     * Reader for the ball detection image.
+     */
     private ImageReader mCaptureReader; // don't convert to local variable. Otherwise GC will clean up weak reference
 
-    /** The ID of the camera to capture the ball detection images. */
+    /**
+     * The ID of the camera to capture the ball detection images.
+     */
     private String mCameraId;
 
-    /** The camera device to capture the ball detection images. */
+    /**
+     * The camera device to capture the ball detection images.
+     */
     private CameraDevice mCameraDevice;
 
-    /** View for the preview image of the camera. */
+    /**
+     * View for the preview image of the camera.
+     */
     private AutoFitTextureView mPreviewTextureView;
 
-    /** The strategy implementation to detect ball in the ball detection capture image. */
+    /**
+     * The strategy implementation to detect ball in the ball detection capture image.
+     */
     private final BallDetectionStrategy mBallDetectionStrategy = new FirstScanBackgroundContrastDiffBallDetectionStrategy();
     private final CameraDevice.StateCallback mCameraDeviceStateCallback = new CameraDevice.StateCallback() {
         @Override
@@ -146,18 +185,23 @@ public class GbcMainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onSurfaceTextureSizeChanged(final SurfaceTexture surface, final int width, final int height) { }
+        public void onSurfaceTextureSizeChanged(final SurfaceTexture surface, final int width, final int height) {
+        }
+
         @Override
         public boolean onSurfaceTextureDestroyed(final SurfaceTexture surface) {
             return false;
         }
+
         @Override
         public void onSurfaceTextureUpdated(final SurfaceTexture surface) { /* Not required */ }
     };
 
-    /** Handles te capture images to detect balls. */
+    /**
+     * Handles te capture images to detect balls.
+     */
     private final OnImageAvailableListener mImageAvailableListener = new OnImageAvailableListener() {
-//        private boolean firstCall = true;
+        //        private boolean firstCall = true;
         @Override
         public void onImageAvailable(final ImageReader reader) {
             try (final Image image = reader.acquireLatestImage()) {
@@ -171,6 +215,8 @@ public class GbcMainActivity extends AppCompatActivity {
                     if (GbcMainActivity.this.mBallDetectionStrategy.hasImageScanChanged(image)) {
                         increaseBallCount();
                     }
+                    calculateBallsPerSecond();
+                    showBallsPerSecond(GbcMainActivity.this.mSecond);
                 }
             } catch (final IllegalArgumentException ex) {
                 toInfoText("new image - Exception: " + ex.getMessage());
@@ -178,7 +224,9 @@ public class GbcMainActivity extends AppCompatActivity {
         }
     };
 
-    /** Task to capture new images at a given time. See also {@link #IMAGE_CAPTURE_DELAY_IN_MILLIS}. */
+    /**
+     * Task to capture new images at a given time. See also {@link #IMAGE_CAPTURE_DELAY_IN_MILLIS}.
+     */
     private final Runnable mImageCaptureTask = new Runnable() {
         @Override
         public void run() {
@@ -190,7 +238,7 @@ public class GbcMainActivity extends AppCompatActivity {
                 ex.printStackTrace();
             } finally {
                 GbcMainActivity.this.mBackgroundHandler.postDelayed(GbcMainActivity.this.mImageCaptureTask,
-                                                                    GbcMainActivity.this.mImageCaptureDelayInMillis);
+                        GbcMainActivity.this.mImageCaptureDelayInMillis);
             }
         }
     };
@@ -199,9 +247,9 @@ public class GbcMainActivity extends AppCompatActivity {
         @Override
         public void onClick(final View v) {
             GbcMainActivity.this.mIsCountSession ^= true;
+            toggleSecondButton(v);
             if (GbcMainActivity.this.mIsCountSession) {
                 disableOptionMenuItems();
-                GbcMainActivity.this.resetDuration();
                 if (GbcMainActivity.this.mBallDetectionStrategy != null) {
                     final ContextContainer ctxCont = new ContextContainer();
                     ctxCont.setPreferences(mSharedPreferences);
@@ -212,6 +260,26 @@ public class GbcMainActivity extends AppCompatActivity {
             } else {
                 enableOptionMenuItems();
                 GbcMainActivity.this.mDurationChrono.stop();
+            }
+        }
+
+        final void toggleSecondButton(final View v) {
+            if (v.getId() == R.id.startstop_toggle_button_top) {
+                changeToggleButton(R.id.startstop_toggle_button_bottom);
+            } else {
+                changeToggleButton(R.id.startstop_toggle_button_top);
+            }
+        }
+
+        final void changeToggleButton(final int toogleButtonId) {
+            final View v = findViewById(toogleButtonId);
+            if (v instanceof ToggleButton) {
+                ((ToggleButton) v).toggle();
+            } else {
+                if (BuildConfig.DEBUG) {
+                    Log.w(TAG, "changeToggleButton(int=" + toogleButtonId + ") "
+                            + "widget is not of type ToggleButton: " + (v != null ? v.getClass().getName() : "null"));
+                }
             }
         }
     };
@@ -234,6 +302,8 @@ public class GbcMainActivity extends AppCompatActivity {
 
         this.mDurationChrono = (Chronometer) findViewById(R.id.duration_view);
         this.mBallCountView = (TextView) findViewById(R.id.ball_count_value);
+        this.mBallsPerSecondView = (TextView) findViewById((R.id.balls_per_second_value));
+
         findViewById(R.id.startstop_toggle_button_top).setOnClickListener(this.mStartstopToggleButtonListener);
         findViewById(R.id.startstop_toggle_button_bottom).setOnClickListener(this.mStartstopToggleButtonListener);
         findViewById(R.id.reset_button_top).setOnClickListener(this.mResetButtonListener);
@@ -283,8 +353,9 @@ public class GbcMainActivity extends AppCompatActivity {
 
     final void resetDuration() {
         GbcMainActivity.this.mDurationChrono.setBase(SystemClock.elapsedRealtime());
+        GbcMainActivity.this.mSecond = 0d;
+        showBallsPerSecond(GbcMainActivity.this.mSecond);
     }
-
 
     @Override
     public void onResume() {
@@ -305,7 +376,7 @@ public class GbcMainActivity extends AppCompatActivity {
     }
 
     final void supportedImageFormat(final StreamConfigurationMap streamConfigs) {
-        assert  streamConfigs != null;
+        assert streamConfigs != null;
         for (final int format : streamConfigs.getOutputFormats()) {
             if (format == CAPTURE_FORMAT) {
                 this.mCaptureImageFormat = format;
@@ -383,14 +454,18 @@ public class GbcMainActivity extends AppCompatActivity {
         }
     }
 
-    /** Starts a background thread and its {@link Handler}. */
+    /**
+     * Starts a background thread and its {@link Handler}.
+     */
     final void startBackgroundThread() {
         this.mBackgroundThread = new HandlerThread("GbcMainBackground");
         this.mBackgroundThread.start();
         this.mBackgroundHandler = new Handler(this.mBackgroundThread.getLooper());
     }
 
-    /** Stops the background thread and its {@link Handler}. */
+    /**
+     * Stops the background thread and its {@link Handler}.
+     */
     final void stopBackgroundThread() {
         this.mBackgroundThread.quitSafely();
         try {
@@ -479,19 +554,25 @@ public class GbcMainActivity extends AppCompatActivity {
     }
 
     final void toInfoText(final String text) {
-        if (text == null) {
-            return;
+        if (BuildConfig.DEBUG) {
+            if (text == null) {
+                return;
+            }
+            final TextView infoText = (TextView) this.findViewById(R.id.info_text);
+            infoText.setText(text);
+        } else {
+            doToast(text);
         }
-        final TextView infoText = (TextView) this.findViewById(R.id.info_text);
-        infoText.setText(text);
     }
 
     final void doToast(final String message) {
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (message != null) {
+            this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     final static class CompareSizesByArea implements Comparator<Size> {
@@ -505,7 +586,6 @@ public class GbcMainActivity extends AppCompatActivity {
     private static final int OPTION_GROUP_ID = 1;
     private static final int PREFS_ID = Menu.FIRST;
     private static final int GOV_ID = Menu.FIRST + 1;
-
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -541,9 +621,24 @@ public class GbcMainActivity extends AppCompatActivity {
     }
 
     final void configure(final SharedPreferences prefs) {
-        if (BuildConfig.DEBUG) {if (prefs == null) {throw new AssertionError("no preferences available");}}
+        if (BuildConfig.DEBUG) {
+            if (prefs == null) {
+                throw new AssertionError("no preferences available");
+            }
+        }
 
         this.mImageCaptureDelayInMillis = prefs.getInt("capture_delay_duration", IMAGE_CAPTURE_DELAY_IN_MILLIS);
+    }
+
+    final void calculateBallsPerSecond() {
+        if (this.mIsCountSession) {
+            this.mSecond = ((float) (SystemClock.elapsedRealtime() - this.mDurationChrono.getBase())) / 1000.0d;
+            this.mSecond = Math.ceil((((double) this.mBallCount) / this.mSecond) * 100.0d) / 100.0d;
+        }
+    }
+
+    final void showBallsPerSecond(final double bps) {
+        this.mBallsPerSecondView.setText(String.format("%.1f", bps));
     }
 
 

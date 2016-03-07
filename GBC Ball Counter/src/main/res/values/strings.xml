@@ -21,8 +21,7 @@
     <string name="app_name">GBC Ball Counter</string>
     <string name="startstop">Start</string>
     <string name="reset">Reset</string>
-    <!--string name="balls_per_second_title">BPS</string-->
-    <string name="balls_per_second_title"> </string>
+    <string name="balls_per_second_title">BPS</string>
     <string name="ball_count">Balls passed</string>
     <string name="duration">Duration</string>
     <string name="start">Start</string>

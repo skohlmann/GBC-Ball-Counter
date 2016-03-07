@@ -27,16 +27,24 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final int prefsId = getIntent().getIntExtra(BallDetectionStrategy.KEY_PREFS_STRATEGY, -1);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment(prefsId)).commit();
+        final SettingsFragment frag = new SettingsFragment();
+        frag.setStrategyPrefsId(prefsId);
+        getFragmentManager().beginTransaction().replace(android.R.id.content, frag).commit();
     }
 
     public static final class SettingsFragment extends PreferenceFragment {
 
-        private final int strategyPrefs;
+        private int strategyPrefs;
 
-        public SettingsFragment(final int strategyPrefs) {
+        public int getStrategyPrefsId() {
+            return this.strategyPrefs;
+        }
+
+        public void setStrategyPrefsId(final int strategyPrefs) {
             this.strategyPrefs = strategyPrefs;
         }
+
+        public SettingsFragment() {}
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
