@@ -5,7 +5,7 @@
         android:title="@string/capture_delay"
         android:summary="@string/capture_delay_summary"
         android:key="capture_delay_duration"
-        android:defaultValue="100"
+        android:defaultValue="50"
         sbp:minValue="25"
         sbp:maxValue="500" />
 </PreferenceScreen>

@@ -18,6 +18,7 @@
 package de.speexx.lego.gbc.ballcounter;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,7 +37,6 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -57,6 +57,10 @@ import android.widget.Toast;
 import android.util.Log;
 import android.widget.ToggleButton;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -201,17 +205,17 @@ public class GbcMainActivity extends AppCompatActivity {
      * Handles te capture images to detect balls.
      */
     private final OnImageAvailableListener mImageAvailableListener = new OnImageAvailableListener() {
-        //        private boolean firstCall = true;
+        private boolean firstCall = true;
         @Override
         public void onImageAvailable(final ImageReader reader) {
             try (final Image image = reader.acquireLatestImage()) {
                 if (image != null) { // Should(!) never happen :)
-/*
-                    if (this.firstCall) {
-                        mBackgroundHandler.post(new ImageSaver(image, GbcMainActivity.this));
-                        this.firstCall = false;
-                    }
-*/
+
+//                    if (this.firstCall) {
+//                        mBackgroundHandler.post(new ImageSaver(image, GbcMainActivity.this));
+//                        this.firstCall = false;
+//                    }
+
                     if (GbcMainActivity.this.mBallDetectionStrategy.hasImageScanChanged(image)) {
                         increaseBallCount();
                     }
@@ -642,7 +646,6 @@ public class GbcMainActivity extends AppCompatActivity {
     }
 
 
-/*
     private static class ImageSaver implements Runnable {
 
         private final Image mImage;
@@ -678,9 +681,10 @@ public class GbcMainActivity extends AppCompatActivity {
             vBuffer.rewind();
 
             final long current = System.currentTimeMillis();
-            final File yFile = new File(this.mActivity.getExternalFilesDir(null), "y" + current + ".yuv");
-            final File uFile = new File(this.mActivity.getExternalFilesDir(null), "u" + current + ".yuv");
-            final File vFile = new File(this.mActivity.getExternalFilesDir(null), "v" + current + ".yuv");
+            final File cacheDir = this.mActivity.getExternalCacheDir();
+            final File yFile = new File(cacheDir, "y" + current + ".yuv");
+            final File uFile = new File(cacheDir, "u" + current + ".yuv");
+            final File vFile = new File(cacheDir, "v" + current + ".yuv");
             try (final FileOutputStream yOutput = new FileOutputStream(yFile);
                  final FileOutputStream uOutput = new FileOutputStream(uFile);
                  final FileOutputStream vOutput = new FileOutputStream(vFile)) {
@@ -692,5 +696,4 @@ public class GbcMainActivity extends AppCompatActivity {
             }
         }
     }
-*/
 }

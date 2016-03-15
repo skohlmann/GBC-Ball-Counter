@@ -49,9 +49,6 @@
         &lt;p>You should have received a copy of the GNU General Public License
         along with this program. If not, see
         &lt;a href="http://www.gnu.org/licenses/gpl-3.0.html">http://www.gnu.org/licenses/gpl-3.0.html&lt;/a>.&lt;/p>
-        &lt;p>─────────────────────&lt;/p>
-        &lt;/p>Find the source code on Github at
-        &lt;a href="https://github.com/skohlmann/GBC-Ball-Counter">https://github.com/skohlmann/GBC-Ball-Counter&lt;/a>.&lt;/p>
         &lt;h2>Other licenses&lt;/h2>
         &lt;p>Parts of the program are taken from the The Android Open Source Project and are
         licensed under the terms of the
@@ -69,19 +66,36 @@
         Taken from &lt;a href="https://openclipart.org/">Open Clipart&lt;/a>. Made available as
         &lt;a href="https://openclipart.org/share">Public Domain&lt;/a>
         by &lt;a href="https://openclipart.org/user-detail/Gioppino">Gioppino&lt;/a>.&lt;/p>
+
+        &lt;h1>Source code&lt;/h1>
+        &lt;/p>Find the source code on Github at
+        &lt;a href="https://github.com/skohlmann/GBC-Ball-Counter">https://github.com/skohlmann/GBC-Ball-Counter&lt;/a>.&lt;/p>
     </string>
     <string name="core_settings">Core Settings</string>
     <string name="title_activity_settings">Settings</string>
     <string name="capture_delay">Capture delay</string>
-    <string name="capture_delay_summary">Duration in milliseconds between capturing two images to check for passed balls.</string>
+    <string name="capture_delay_summary">Duration in milliseconds between capturing two images to check for passing balls.</string>
 
     <string name="first_scan_background_contrast_strategy_settings">First scan background contrast strategy</string>
-    <string name="capture_delay_after_detection">Capture after detection delay</string>
+    <string name="capture_delay_after_detection">Capture delay after ball detection</string>
     <string name="capture_delay_after_detection_summary">Duration in milliseconds between capturing the next image after detecting a ball.</string>
 
-    <string name="brightness_difference">Brightness difference</string>
-    <string name="brightness_difference_summary">The difference of the brightness for the captured image pixel to detected a change.</string>
+    <string name="luminance_difference_title">Brightness difference</string>
+    <string name="luminance_difference_summary_android50">The difference of the brightness between foreground and background to detected a ball.</string>
+    <string name="luminance_difference_summary_android51">The difference of the brightness between foreground and background to detected a white ball.</string>
 
-    <string name="minimum_difference">Minimum difference in percent</string>
+    <string name="minimum_difference_title">Minimum difference in percent</string>
     <string name="minimum_difference_summary">Minimum value in percent of detected changes to signal a passing ball.</string>
+
+    <string name="white_ball_support">Ball group contains white balls (e.g. soccer balls)?</string>
+    <string name="white_ball_support_summary_off">No white balls in ball group.</string>
+    <string name="white_ball_support_summary_on">Ball group contains white balls.\n\nWARNING: this may increase false-positive ball counts.</string>
+
+    <string name="chrominance_minimum_difference_title">Color difference</string>
+    <string name="chrominance_minimum_difference_summary">The minimum color difference between the background color and the foreground color to detect a colored ball.</string>
+
+    <string name="android_50_compatibility_title">Android 5.0 (Lollipop) detection mode</string>
+    <string name="android_50_compatibility_summary_off">Brightness only based ball detection mode for Android 5.0 is not in use (default).</string>
+    <string name="android_50_compatibility_summary_on">Android 5.0 brightness only based ball detection mode is in use (not default). Switch on "Ball group contains white balls (e.g. soccer balls)?" to change minimum brightness difference.\n\nWARNING: this may increase false-positive ball counts. Color detection has no effect.</string>
+
 </resources>
