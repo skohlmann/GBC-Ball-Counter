@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 21
         versionCode 5
-        versionName "1.4-SNAPSHOT-" + getDate();
+        versionName "1.4-" + getDate();
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
