@@ -44,9 +44,7 @@ can be changed in the settings dialog.
 Due to an [issue](http://stackoverflow.com/questions/32927405/converting-yuv-image-to-rgb-results-in-greenish-picture "Converting YUV image to RGB results in greenish picture") with handling [YUV 420 888 images](http://developer.android.com/reference/android/graphics/ImageFormat.html#YUV_420_888 "Android Javadoc") in Android API 21 (5.0.x), the current release supports only a simple ball detection mode.
 This issue can raise false positive counts if the brightness of the environment change to much.
 
-I'll may fix this if I have a real device with Android API 22 (Android 5.1.x) of higher.
-
-The change will be implemented in a way to also detect luminance differences in the image. This might reduce false positive detections but needs support for mostly white Lego&#174; balls (e.g soccerballs/footballs).
+With release 1.4 this issue is not available on Android 5.1 or higher but still available on Android 5.0 systems.
 
 # More on GBC
 Start for Lego&reg; GBC at [Youtube](https://www.youtube.com/results?search_query=lego+gbc "Search for Lego GBC on Youtube").
