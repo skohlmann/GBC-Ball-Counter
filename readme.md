@@ -1,6 +1,8 @@
 # GBC Ball Counter
 The GBC (Great Ball Contraption) Ball Counter is a small Android (5.0.x or higher) application to count Lego&#174; balls passing. This is done by comparing two images captured by the back camera of an Android device.
 
+See the [Lego Ball Counter in action on Youtube](https://www.youtube.com/watch?v=XqT_O4tkBbM).
+
 ## Installation
 The application is currently not available via the Google Play store.
 
